@@ -9,7 +9,7 @@ public static class DirectoryActions
 
         var compareFiles = main.Files.Where(m => sub.Files.Select(s => s.Name).Contains(m.Name));
         var newFiles = main.Files.Where(m => !sub.Files.Select(s => s.Name).Contains(m.Name));
-        var deletedFiles = sub.Files.Where(m => !sub.Files.Select(s => s.Name).Contains(m.Name));
+        var deletedFiles = sub.Files.Where(m => !main.Files.Select(s => s.Name).Contains(m.Name));
 
 
         foreach (var directory in deleteDirectories) { AddDeletedDirectory(directory); }
@@ -87,35 +87,34 @@ public static class DirectoryActions
     {
         Marks.Clear();
 
-        Console.WriteLine($"From:{from}");
-        Console.WriteLine($"To:{to}");
-        Console.WriteLine();
+        Console.WriteLine($"\nFrom:{from}\nTo:{to}\n");
 
         if (string.IsNullOrEmpty(from) || string.IsNullOrEmpty(to))
         {
-            Console.WriteLine("Path Error!");
+            Console.WriteLine("Path Empty Error!");
             Console.ReadLine();
         }
 
         var mainDirectory = new SyncMaster.Models.Directory(from);
         var subDirectory = new SyncMaster.Models.Directory(to);
 
-        Console.WriteLine("Scaning...");
+        var directoryName = from.Contains("\\") ?
+            from.Substring(from.LastIndexOf('\\')+1) :
+            from.Substring(from.LastIndexOf('/')+1);
+        Console.WriteLine($"Syncing \"{directoryName}\" folder...");
+
         DirectoryActions.SyncDirectoriesRecursively(mainDirectory, subDirectory);
 
         if (!Marks.Check())
         {
-            Console.WriteLine("Conflicts!");
-            Console.ReadLine();
+            Console.WriteLine($"Conflicts!\n\tFrom:{from}\n\tTo:{to}");
         }
-
-        Console.WriteLine("Syncing...");
-        FileActions.DeleteFiles();
-        DirectoryActions.DeleteDirectories();
-        DirectoryActions.CopyDirectories();
-        FileActions.CopyFiles();
-        Console.WriteLine();
-        Console.WriteLine("Sync end");
-        Console.WriteLine();
+        else
+        {
+            FileActions.DeleteFiles();
+            DirectoryActions.DeleteDirectories();
+            DirectoryActions.CopyDirectories();
+            FileActions.CopyFiles();
+        }
     }
 }

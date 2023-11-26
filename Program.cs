@@ -12,6 +12,9 @@ if (!File.Exists(fileName))
 }
 var fileData = File.ReadAllText(fileName);
 var directoriesPairs = fileData.Split(';');
+var syncTask = new List<Task>();
+
+Console.WriteLine("Scaning...");
 foreach (var directoriesPair in directoriesPairs)
 {
     var clearData = directoriesPair;
@@ -21,6 +24,9 @@ foreach (var directoriesPair in directoriesPairs)
     if (string.IsNullOrEmpty(clearData)) continue;
     var dirs = clearData.Split(',');
     DirectoryActions.Sync(dirs.First(), dirs.Last());
+    //syncTask.Add(Task.Run(() =>DirectoryActions.Sync(dirs.First(), dirs.Last())));
 }
 
-Task.Delay(3000).Wait();
+//Task.WaitAll(syncTask.ToArray());
+Console.WriteLine("\n\nSync end");
+Console.ReadLine();
