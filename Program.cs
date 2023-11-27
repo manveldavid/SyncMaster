@@ -24,9 +24,7 @@ foreach (var directoriesPair in directoriesPairs)
     if (string.IsNullOrEmpty(clearData)) continue;
     var dirs = clearData.Split(',');
     DirectoryActions.Sync(dirs.First(), dirs.Last());
-    //syncTask.Add(Task.Run(() =>DirectoryActions.Sync(dirs.First(), dirs.Last())));
 }
 
-//Task.WaitAll(syncTask.ToArray());
 Console.WriteLine("\n\nSync end");
 Console.ReadLine();

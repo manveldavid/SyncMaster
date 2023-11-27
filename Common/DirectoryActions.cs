@@ -98,10 +98,7 @@ public static class DirectoryActions
         var mainDirectory = new SyncMaster.Models.Directory(from);
         var subDirectory = new SyncMaster.Models.Directory(to);
 
-        var directoryName = from.Contains("\\") ?
-            from.Substring(from.LastIndexOf('\\')+1) :
-            from.Substring(from.LastIndexOf('/')+1);
-        Console.WriteLine($"Syncing \"{directoryName}\" folder...");
+        Console.WriteLine($"Syncing \"{mainDirectory.Name}\" folder...");
 
         DirectoryActions.SyncDirectoriesRecursively(mainDirectory, subDirectory);
 
