@@ -4,10 +4,18 @@ public class Directory
     public const char Separator = '\\';
     public Directory(string path, Directory parent = null)
     {
-        if(!System.IO.Directory.Exists(path))
+        try
         {
-            System.IO.Directory.CreateDirectory(path);
+            if (!System.IO.Directory.Exists(path))
+            {
+                System.IO.Directory.CreateDirectory(path);
+            }
         }
+        catch (Exception ex) 
+        {
+            Console.WriteLine(ex.Message);
+        }
+
         Parent = parent;
         FullName = path;
         Name = path.Substring(path.LastIndexOf(Separator) + 1);

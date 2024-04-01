@@ -1,29 +1,26 @@
 ﻿using SyncMaster.Common;
+using SyncMaster.Models;
 using System.Diagnostics;
-using System.Reflection;
+using System.Text.Json;
 
-var fileName = "SyncDirectories.txt";
+var fileName = "SyncDirectories.json";
 if (!File.Exists(fileName))
 {
-    File.Create(fileName).Close();
-    var filePath = Path.Combine(new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName, fileName);
-    Process.Start("explorer ", filePath);
+    var filePath = Path.Combine(AppContext.BaseDirectory, fileName);
+    File.Create(filePath).Close();
+    Process.Start(new ProcessStartInfo() { FileName = filePath, UseShellExecute = true });
     return;
 }
-var fileData = File.ReadAllText(fileName);
-var directoriesPairs = fileData.Split(';');
-var syncTask = new List<Task>();
 
 Console.WriteLine("Scaning...");
-foreach (var directoriesPair in directoriesPairs)
+
+var fileData = File.ReadAllText(fileName);
+
+var syncInfos = JsonSerializer.Deserialize<IEnumerable<SyncInfo>>(fileData);
+
+foreach (var syncInfo in syncInfos!)
 {
-    var clearData = directoriesPair;
-    clearData = clearData.Replace("\n", "");
-    clearData = clearData.Replace("\r", "");
-    clearData = clearData.Replace(" ", "");
-    if (string.IsNullOrEmpty(clearData)) continue;
-    var dirs = clearData.Split(',');
-    DirectoryActions.Sync(dirs.First(), dirs.Last());
+    DirectoryActions.Sync(syncInfo.From, syncInfo.To);
 }
 
 Console.WriteLine("\n\nSync end");

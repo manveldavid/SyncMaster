@@ -26,6 +26,10 @@ public static class FileActions
             try
             {
                 File.Delete(file.FullName);
+                var leftPosition = Console.CursorLeft;
+                var topPosition = Console.CursorTop;
+                Console.Write("delete " + file.FullName);
+                Console.SetCursorPosition(leftPosition, topPosition);
             }
             catch(Exception ex) 
             {
@@ -38,6 +42,10 @@ public static class FileActions
         try
         {
             File.Copy(file.FullName, destination + Models.Directory.Separator + file.Name, true);
+            var leftPosition = Console.CursorLeft;
+            var topPosition = Console.CursorTop;
+            Console.Write("copy from " + file.FullName + "to " + destination + Models.Directory.Separator + file.Name);
+            Console.SetCursorPosition(leftPosition, topPosition);
         }
         catch (Exception ex)
         {
