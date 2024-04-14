@@ -25,6 +25,13 @@ public static class FileActions
         {
             try
             {
+                if((File.GetAttributes(file.FullName) & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
+                {
+                    var attributes = File.GetAttributes(file.FullName);
+                    attributes &= ~FileAttributes.ReadOnly;
+                    File.SetAttributes(file.FullName, attributes);
+                }
+
                 File.Delete(file.FullName);
             }
             catch(Exception ex) 

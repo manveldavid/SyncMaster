@@ -51,6 +51,15 @@ public static class DirectoryActions
         {
             try
             {
+                Directory.GetFiles(directory.FullName, "*", SearchOption.AllDirectories)
+                    .Where(f => (File.GetAttributes(f) & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
+                    .ToList().ForEach(path =>
+                    {
+                        var attributes = File.GetAttributes(path);
+                        attributes &= ~FileAttributes.ReadOnly;
+                        File.SetAttributes(path, attributes);
+                    });
+
                 Directory.Delete(directory.FullName, true);
             }
             catch(Exception ex)
