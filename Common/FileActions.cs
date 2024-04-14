@@ -44,7 +44,16 @@ public static class FileActions
     {
         try
         {
-            File.Copy(file.FullName, destination + Models.Directory.Separator + file.Name, true);
+            if ((File.GetAttributes(file.FullName) & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
+            {
+                var attributes = File.GetAttributes(file.FullName);
+                attributes &= ~FileAttributes.ReadOnly;
+                File.SetAttributes(file.FullName, attributes);
+                File.Copy(file.FullName, destination + Models.Directory.Separator + file.Name, true);
+                File.SetAttributes(file.FullName, FileAttributes.ReadOnly);
+            }
+            else
+                File.Copy(file.FullName, destination + Models.Directory.Separator + file.Name, true);
         }
         catch (Exception ex)
         {
