@@ -1,4 +1,5 @@
-It helps you if you want to syncronize directories from PC to external device
+It helps you if you want to syncronize directories from PC to external device.
+
 Configure file `SyncDirectories.json` struct:
 ```json
 [
